@@ -26,6 +26,10 @@
         if ([self.targetFormat.lowercaseString isEqualToString:@"png"]) {
             return [self convertJPGtoPNG];
         }
+    } else if ([self.currentFormat.lowercaseString isEqualToString:@"heic"]) {
+        if ([self.targetFormat.lowercaseString isEqualToString:@"jpg"] || [self.targetFormat.lowercaseString isEqualToString:@"jpeg"]) {
+            return [self convertHEICtoJPG];
+        }
     }
     
     NSLog(@"Conversion from %@ to %@ is not supported", self.currentFormat, self.targetFormat);
@@ -62,6 +66,47 @@
         return tempFilePath;
     } else {
         NSLog(@"Failed to write PNG file: %@", tempFilePath);
+        return nil;
+    }
+}
+
+- (NSString *)convertHEICtoJPG {
+    // Check file permissions
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if (![fileManager isReadableFileAtPath:self.filePath]) {
+        NSLog(@"Error: No permission to read the file at path: %@", self.filePath);
+        return nil;
+    }
+
+    NSString *tempFilePath = [self createTemporaryFilePathWithExtension:@"jpg"];
+    
+    NSTask *task = [[NSTask alloc] init];
+    [task setLaunchPath:@"/usr/bin/sips"];
+    
+    NSArray *arguments = @[
+        @"-s", @"format", @"jpeg",
+        self.filePath,
+        @"--out", tempFilePath
+    ];
+    [task setArguments:arguments];
+    
+    NSPipe *pipe = [NSPipe pipe];
+    [task setStandardOutput:pipe];
+    [task setStandardError:pipe];
+    
+    NSFileHandle *file = [pipe fileHandleForReading];
+    
+    [task launch];
+    [task waitUntilExit];
+    
+    NSData *data = [file readDataToEndOfFile];
+    NSString *output = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    
+    if ([task terminationStatus] == 0) {
+        NSLog(@"Successfully converted %@ to JPG: %@", self.filePath, tempFilePath);
+        return tempFilePath;
+    } else {
+        NSLog(@"Failed to convert HEIC to JPG. Error: %@", output);
         return nil;
     }
 }

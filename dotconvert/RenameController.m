@@ -87,22 +87,62 @@
     NSSound *sound = [NSSound soundNamed:@"Mail Sent"];
     [sound play];
     
-    //convert
-    [self convert:currentPath oldExtension:oldExtension newExtension:newExtension];
-}
-
-- (void)convert:(NSString *)filePath oldExtension:(NSString *)oldExtension newExtension:(NSString *)newExtension {
-    //JPG -> PNG
-    if ([oldExtension.lowercaseString isEqualToString:@"jpg"] && [newExtension.lowercaseString isEqualToString:@"png"]) {
-        [self convertJPGtoPNG:filePath];
-    } 
-    //FALLBACK
-    else {
-        NSLog(@"Conversion from %@ to %@ is not supported", oldExtension, newExtension);
+    // Convert and get the temp file path
+    NSString *convertedTempFilePath = [self convert:currentPath oldExtension:oldExtension newExtension:newExtension];
+    
+    if (convertedTempFilePath) {
+        NSError *error = nil;
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        
+        // Move the original file to trash
+        NSURL *originalFileURL = [NSURL fileURLWithPath:currentPath];
+        if ([fileManager trashItemAtURL:originalFileURL resultingItemURL:nil error:&error]) {
+            // Move the converted temp file to the original file's location
+            if ([fileManager moveItemAtPath:convertedTempFilePath toPath:currentPath error:&error]) {
+                NSLog(@"Successfully replaced the original file with the converted file");
+            } else {
+                NSLog(@"Error moving converted file: %@", error.localizedDescription);
+            }
+        } else {
+            NSLog(@"Error moving original file to trash: %@", error.localizedDescription);
+            // Clean up the temp file if we couldn't move the original to trash
+            [fileManager removeItemAtPath:convertedTempFilePath error:nil];
+        }
     }
 }
 
-- (void)convertJPGtoPNG:(NSString *)filePath {
+- (NSString *)convert:(NSString *)filePath oldExtension:(NSString *)oldExtension newExtension:(NSString *)newExtension {
+    //JPG -> PNG
+    if ([oldExtension.lowercaseString isEqualToString:@"jpg"] && [newExtension.lowercaseString isEqualToString:@"png"]) {
+        return [self convertJPGtoPNG:filePath];
+    } 
+    //HEIC -> JPG
+    else if ([oldExtension.lowercaseString isEqualToString:@"heic"] && [newExtension.lowercaseString isEqualToString:@"jpg"]) {
+        return [self convertHEICtoJPG:filePath];
+    }
+    //FALLBACK
+    else {
+        NSLog(@"Conversion from %@ to %@ is not supported", oldExtension, newExtension);
+        return nil;
+    }
+}
+
+- (NSString *)convertHEICtoJPG:(NSString *)filePath {
+    ImageConverter *converter = [[ImageConverter alloc] initWithFilePath:filePath
+                                                           currentFormat:@"heic"
+                                                            targetFormat:@"jpg"];
+    NSString *tempFilePath = [converter convert];
+
+    if (tempFilePath) {
+        NSLog(@"Successfully converted %@ from HEIC to JPG. Temporary file: %@", filePath, tempFilePath);
+    } else {
+        NSLog(@"Failed to convert %@ from HEIC to JPG", filePath);
+    }
+    
+    return tempFilePath;
+}
+
+- (NSString *)convertJPGtoPNG:(NSString *)filePath {
     ImageConverter *converter = [[ImageConverter alloc] initWithFilePath:filePath
                                                            currentFormat:@"jpg"
                                                             targetFormat:@"png"];
@@ -110,17 +150,11 @@
     
     if (tempFilePath) {
         NSLog(@"Successfully converted %@ from JPG to PNG. Temporary file: %@", filePath, tempFilePath);
-        
-        // TODO: Handle the temporary file (e.g., move it to the desired location)
-        // For example:
-        // NSString *newFilePath = [[filePath stringByDeletingPathExtension] stringByAppendingPathExtension:@"png"];
-        // [[NSFileManager defaultManager] moveItemAtPath:tempFilePath toPath:newFilePath error:nil];
-        
-        // Don't forget to remove the temporary file if you're done with it:
-        // [[NSFileManager defaultManager] removeItemAtPath:tempFilePath error:nil];
     } else {
         NSLog(@"Failed to convert %@ from JPG to PNG", filePath);
     }
+    
+    return tempFilePath;
 }
 
 @end
