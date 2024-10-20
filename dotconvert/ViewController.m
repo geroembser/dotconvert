@@ -14,6 +14,7 @@
 @property (nonatomic, assign) FSEventStreamRef eventStream;
 @property (nonatomic, strong) RenameController *renameController;
 @property (nonatomic, strong) NSURL *monitoredDirectoryURL;
+@property (nonatomic, strong) NSButton *selectButton;
 
 @end
 
@@ -24,11 +25,11 @@
     
     self.renameController = [[RenameController alloc] init];
     
-    NSButton *selectButton = [[NSButton alloc] initWithFrame:NSMakeRect(50, 50, 200, 30)];
-    [selectButton setTitle:@"Select Directory"];
-    [selectButton setTarget:self];
-    [selectButton setAction:@selector(selectDirectory:)];
-    [self.view addSubview:selectButton];
+    self.selectButton = [[NSButton alloc] initWithFrame:NSMakeRect(50, 50, 200, 30)];
+    [self.selectButton setTitle:@"Select Directory"];
+    [self.selectButton setTarget:self];
+    [self.selectButton setAction:@selector(selectDirectory:)];
+    [self.view addSubview:self.selectButton];
 }
 
 - (IBAction)selectDirectory:(id)sender {
@@ -45,6 +46,9 @@
             self.pathControl.URL = selectedURL;
             self.pathControl.hidden = false;
             [self startMonitoringPath:selectedURL.path];
+            
+            // Update button title
+            [self.selectButton setTitle:@"Change Directory"];
         }
     }];
 }
