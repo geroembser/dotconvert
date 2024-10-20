@@ -1,0 +1,6 @@
+framework module Pods_dotconvert_dotconvertUITests {
+  umbrella header "Pods-dotconvert-dotconvertUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
