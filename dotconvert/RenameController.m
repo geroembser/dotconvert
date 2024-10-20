@@ -2,6 +2,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AppKit/AppKit.h>
 #import "ImageConverter.h"
+#import "AudioConverter.h"
 
 @interface RenameController ()
 
@@ -128,6 +129,14 @@
     else if ([oldExtension.lowercaseString isEqualToString:@"heic"] && [newExtension.lowercaseString isEqualToString:@"jpg"]) {
         return [self convertHEICtoJPG:filePath];
     }
+    //MP3 -> OGG
+    else if ([oldExtension.lowercaseString isEqualToString:@"mp3"] && [newExtension.lowercaseString isEqualToString:@"ogg"]) {
+        return [self convertMP3toOGG:filePath];
+    }
+    //OGG -> MP3
+    else if ([oldExtension.lowercaseString isEqualToString:@"ogg"] && [newExtension.lowercaseString isEqualToString:@"mp3"]) {
+        return [self convertOGGtoMP3:filePath];
+    }
     //FALLBACK
     else {
         NSLog(@"Conversion from %@ to %@ is not supported", oldExtension, newExtension);
@@ -160,6 +169,36 @@
         NSLog(@"Successfully converted %@ from JPG to PNG. Temporary file: %@", filePath, tempFilePath);
     } else {
         NSLog(@"Failed to convert %@ from JPG to PNG", filePath);
+    }
+    
+    return tempFilePath;
+}
+
+- (NSString *)convertMP3toOGG:(NSString *)filePath {
+    AudioConverter *converter = [[AudioConverter alloc] initWithFilePath:filePath
+                                                           currentFormat:@"mp3"
+                                                            targetFormat:@"ogg"];
+    NSString *tempFilePath = [converter convert];
+    
+    if (tempFilePath) {
+        NSLog(@"Successfully converted %@ from MP3 to OGG. Temporary file: %@", filePath, tempFilePath);
+    } else {
+        NSLog(@"Failed to convert %@ from MP3 to OGG", filePath);
+    }
+    
+    return tempFilePath;
+}
+
+- (NSString *)convertOGGtoMP3:(NSString *)filePath {
+    AudioConverter *converter = [[AudioConverter alloc] initWithFilePath:filePath
+                                                           currentFormat:@"ogg"
+                                                            targetFormat:@"mp3"];
+    NSString *tempFilePath = [converter convert];
+    
+    if (tempFilePath) {
+        NSLog(@"Successfully converted %@ from OGG to MP3. Temporary file: %@", filePath, tempFilePath);
+    } else {
+        NSLog(@"Failed to convert %@ from OGG to MP3", filePath);
     }
     
     return tempFilePath;
