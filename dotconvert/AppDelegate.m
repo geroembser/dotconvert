@@ -79,7 +79,7 @@
 
 - (void)conversionStarted:(NSNotification *)notification {
     NSLog(@"Conversion started notification received");
-    
+
     dispatch_async(dispatch_get_main_queue(), ^{
         self.statusItem.button.image = self.conversionIcon;
     });
@@ -134,7 +134,7 @@
         UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
         content.title = @"Conversion Not Supported";
         content.body = [NSString stringWithFormat:@"Conversion from %@ to %@ is not supported", sourceFormat, targetFormat];
-        content.sound = [UNNotificationSound defaultSound];
+        content.sound = [UNNotificationSound soundNamed:@"Basso"];
         
         UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:@"ConversionNotSupportedNotification"
                                                                               content:content
