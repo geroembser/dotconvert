@@ -147,6 +147,12 @@ static NSString * const kAsyncConversionInProgress = @"AsyncConversionInProgress
         [self convertAudioAsync:filePath oldExtension:oldExtension newExtension:newExtension];
         return kAsyncConversionInProgress; // Return special value for async conversion
     }
+    //MP3 -> M4A or M4A -> MP3
+    else if (([oldExtension.lowercaseString isEqualToString:@"mp3"] && [newExtension.lowercaseString isEqualToString:@"m4a"]) ||
+             ([oldExtension.lowercaseString isEqualToString:@"m4a"] && [newExtension.lowercaseString isEqualToString:@"mp3"])) {
+        [self convertAudioAsync:filePath oldExtension:oldExtension newExtension:newExtension];
+        return kAsyncConversionInProgress; // Return special value for async conversion
+    }
     //FALLBACK
     else {
         // Post notification for unsupported conversion

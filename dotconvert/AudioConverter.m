@@ -28,6 +28,12 @@
     } else if ([self.currentFormat.lowercaseString isEqualToString:@"ogg"] && 
                [self.targetFormat.lowercaseString isEqualToString:@"mp3"]) {
         [self convertOGGtoMP3WithCompletionHandler:completionHandler];
+    } else if ([self.currentFormat.lowercaseString isEqualToString:@"mp3"] && 
+               [self.targetFormat.lowercaseString isEqualToString:@"m4a"]) {
+        [self convertMP3toM4AWithCompletionHandler:completionHandler];
+    } else if ([self.currentFormat.lowercaseString isEqualToString:@"m4a"] && 
+               [self.targetFormat.lowercaseString isEqualToString:@"mp3"]) {
+        [self convertM4AtoMP3WithCompletionHandler:completionHandler];
     } else {
         NSLog(@"Conversion from %@ to %@ is not supported", self.currentFormat, self.targetFormat);
         completionHandler(nil, [NSError errorWithDomain:@"AudioConverterErrorDomain" code:1 userInfo:@{NSLocalizedDescriptionKey: @"Unsupported conversion"}]);
@@ -82,6 +88,60 @@
         } else {
             NSLog(@"Failed to convert OGG to MP3. Error: %@", [session getOutput]);
             completionHandler(nil, [NSError errorWithDomain:@"AudioConverterErrorDomain" code:4 userInfo:@{NSLocalizedDescriptionKey: @"Failed to convert OGG to MP3"}]);
+        }
+    } withLogCallback:^(Log *log) {
+        NSLog(@"FFmpeg Log: %@", [log getMessage]);
+    } withStatisticsCallback:nil];
+}
+
+- (void)convertMP3toM4AWithCompletionHandler:(void (^)(NSString *outputPath, NSError *error))completionHandler {
+    // Check file permissions
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if (![fileManager isReadableFileAtPath:self.filePath]) {
+        NSLog(@"Error: No permission to read the file at path: %@", self.filePath);
+        completionHandler(nil, [NSError errorWithDomain:@"AudioConverterErrorDomain" code:2 userInfo:@{NSLocalizedDescriptionKey: @"No permission to read the file"}]);
+        return;
+    }
+
+    NSString *outputPath = [self createTemporaryFilePathWithExtension:@"m4a"];
+    
+    NSString *ffmpegCommand = [NSString stringWithFormat:@"-i %@ -c:a aac -b:a 192k %@", self.filePath, outputPath];
+    
+    [FFmpegKit executeAsync:ffmpegCommand withCompleteCallback:^(FFmpegSession* session) {
+        ReturnCode *returnCode = [session getReturnCode];
+        if ([ReturnCode isSuccess:returnCode]) {
+            NSLog(@"Successfully converted %@ to M4A: %@", self.filePath, outputPath);
+            completionHandler(outputPath, nil);
+        } else {
+            NSLog(@"Failed to convert MP3 to M4A. Error: %@", [session getOutput]);
+            completionHandler(nil, [NSError errorWithDomain:@"AudioConverterErrorDomain" code:5 userInfo:@{NSLocalizedDescriptionKey: @"Failed to convert MP3 to M4A"}]);
+        }
+    } withLogCallback:^(Log *log) {
+        NSLog(@"FFmpeg Log: %@", [log getMessage]);
+    } withStatisticsCallback:nil];
+}
+
+- (void)convertM4AtoMP3WithCompletionHandler:(void (^)(NSString *outputPath, NSError *error))completionHandler {
+    // Check file permissions
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if (![fileManager isReadableFileAtPath:self.filePath]) {
+        NSLog(@"Error: No permission to read the file at path: %@", self.filePath);
+        completionHandler(nil, [NSError errorWithDomain:@"AudioConverterErrorDomain" code:2 userInfo:@{NSLocalizedDescriptionKey: @"No permission to read the file"}]);
+        return;
+    }
+
+    NSString *outputPath = [self createTemporaryFilePathWithExtension:@"mp3"];
+    
+    NSString *ffmpegCommand = [NSString stringWithFormat:@"-i %@ -acodec libmp3lame -b:a 192k %@", self.filePath, outputPath];
+    
+    [FFmpegKit executeAsync:ffmpegCommand withCompleteCallback:^(FFmpegSession* session) {
+        ReturnCode *returnCode = [session getReturnCode];
+        if ([ReturnCode isSuccess:returnCode]) {
+            NSLog(@"Successfully converted %@ to MP3: %@", self.filePath, outputPath);
+            completionHandler(outputPath, nil);
+        } else {
+            NSLog(@"Failed to convert M4A to MP3. Error: %@", [session getOutput]);
+            completionHandler(nil, [NSError errorWithDomain:@"AudioConverterErrorDomain" code:6 userInfo:@{NSLocalizedDescriptionKey: @"Failed to convert M4A to MP3"}]);
         }
     } withLogCallback:^(Log *log) {
         NSLog(@"FFmpeg Log: %@", [log getMessage]);
