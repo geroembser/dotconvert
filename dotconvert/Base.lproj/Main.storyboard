@@ -709,19 +709,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <button hidden="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nIP-q6-K4u">
-                                <rect key="frame" x="175" y="105" width="132" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="push" title="Select Directory" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Hvf-KX-mnd">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <pathControl hidden="YES" verticalHuggingPriority="750" fixedFrame="YES" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QLc-tI-gP6">
+                                <rect key="frame" x="0.0" y="0.0" width="480" height="22"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <pathCell key="cell" truncatesLastVisibleLine="YES" selectable="YES" editable="YES" alignment="left" id="G5h-xc-qm5">
                                     <font key="font" metaFont="system"/>
-                                    <connections>
-                                        <action selector="selectDirectory:" target="XfG-lQ-9wD" id="lN5-yR-d1v"/>
-                                    </connections>
-                                </buttonCell>
-                            </button>
+                                    <url key="url" string="file:///Applications/"/>
+                                </pathCell>
+                            </pathControl>
                         </subviews>
                     </view>
+                    <connections>
+                        <outlet property="pathControl" destination="QLc-tI-gP6" id="wuU-fJ-MAi"/>
+                    </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>

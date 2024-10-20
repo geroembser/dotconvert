@@ -10,5 +10,6 @@
 @interface ViewController : NSViewController
 
 - (IBAction)selectDirectory:(id)sender;
+@property (weak) IBOutlet NSPathControl *pathControl;
 
 @end

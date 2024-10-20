@@ -42,6 +42,8 @@
         if (result == NSModalResponseOK) {
             NSURL *selectedURL = openPanel.URLs.firstObject;
             self.monitoredDirectoryURL = selectedURL;
+            self.pathControl.URL = selectedURL;
+            self.pathControl.hidden = false;
             [self startMonitoringPath:selectedURL.path];
         }
     }];
