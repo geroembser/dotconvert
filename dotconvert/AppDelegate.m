@@ -8,10 +8,12 @@
 #import "AppDelegate.h"
 #import "ViewController.h"
 #import <UserNotifications/UserNotifications.h>
+#import "ImageConverter.h"
 
 @interface AppDelegate () <UNUserNotificationCenterDelegate>
 
 @property (strong, nonatomic) NSImage *defaultIcon;
+@property (strong, nonatomic) NSImage *conversionIcon;
 @property (strong, nonatomic) NSImage *checkmarkIcon;
 
 @end
@@ -21,6 +23,7 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     // Load icons
     self.defaultIcon = [NSImage imageWithSystemSymbolName:@"folder.badge.gearshape" accessibilityDescription:@"DotConvert"];
+    self.conversionIcon = [NSImage imageWithSystemSymbolName:@"gearshape.arrow.triangle.2.circlepath" accessibilityDescription:@"Converting"];
     self.checkmarkIcon = [NSImage imageWithSystemSymbolName:@"checkmark.circle" accessibilityDescription:@"Conversion Done"];
     
     [self setupMenuBarItem];
@@ -37,8 +40,16 @@
 
     // Register for notifications
     [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(conversionStarted:)
+                                                 name:@"ConversionStartedNotification"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(conversionDone:)
                                                  name:@"ConversionDoneNotification"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(conversionNotSupported:)
+                                                 name:@"ConversionNotSupportedNotification"
                                                object:nil];
 }
 
@@ -66,9 +77,18 @@
     }
 }
 
-- (void)conversionDone:(NSNotification *)notification {
-    self.statusItem.button.image = self.checkmarkIcon;
+- (void)conversionStarted:(NSNotification *)notification {
+    NSLog(@"Conversion started notification received");
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.statusItem.button.image = self.conversionIcon;
+    });
+}
 
+- (void)conversionDone:(NSNotification *)notification {
+    dispatch_async(dispatch_get_main_queue(), ^{
+    self.statusItem.button.image = self.checkmarkIcon;
+    
     // Print to console
     NSLog(@"Conversion done notification received");
     
@@ -83,11 +103,11 @@
     content.sound = [UNNotificationSound defaultSound];
     
     UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:@"ConversionNotification"
-                                                                          content:content
-                                                                          trigger:nil];
+                                                            content:content
+                                                            trigger:nil];
     
     [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request
-                                                           withCompletionHandler:^(NSError * _Nullable error) {
+                                                                        withCompletionHandler:^(NSError * _Nullable error) {
         if (error) {
             NSLog(@"Error showing notification: %@", error.localizedDescription);
         }
@@ -95,6 +115,37 @@
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         self.statusItem.button.image = self.defaultIcon;
+    });
+    });
+}
+
+- (void)conversionNotSupported:(NSNotification *)notification {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.statusItem.button.image = self.defaultIcon;
+        
+        // Print to console
+        NSLog(@"Conversion not supported notification received");
+        
+        // Show push notification
+        NSDictionary *userInfo = notification.userInfo;
+        NSString *sourceFormat = userInfo[@"sourceFormat"];
+        NSString *targetFormat = userInfo[@"targetFormat"];
+        
+        UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+        content.title = @"Conversion Not Supported";
+        content.body = [NSString stringWithFormat:@"Conversion from %@ to %@ is not supported", sourceFormat, targetFormat];
+        content.sound = [UNNotificationSound defaultSound];
+        
+        UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:@"ConversionNotSupportedNotification"
+                                                                              content:content
+                                                                              trigger:nil];
+        
+        [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request
+                                                               withCompletionHandler:^(NSError * _Nullable error) {
+            if (error) {
+                NSLog(@"Error showing notification: %@", error.localizedDescription);
+            }
+        }];
     });
 }
 

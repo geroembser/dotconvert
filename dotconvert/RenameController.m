@@ -121,6 +121,9 @@
 }
 
 - (NSString *)convert:(NSString *)filePath oldExtension:(NSString *)oldExtension newExtension:(NSString *)newExtension {
+    // Post notification that conversion has started
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ConversionStartedNotification" object:nil];
+
     //JPG -> PNG
     if ([oldExtension.lowercaseString isEqualToString:@"jpg"] && [newExtension.lowercaseString isEqualToString:@"png"]) {
         return [self convertJPGtoPNG:filePath];
@@ -139,6 +142,15 @@
     }
     //FALLBACK
     else {
+        // Post notification for unsupported conversion
+        NSDictionary *userInfo = @{
+            @"sourceFormat": oldExtension,
+            @"targetFormat": newExtension
+        };
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ConversionNotSupportedNotification" 
+                                                            object:nil 
+                                                            userInfo:userInfo];
+
         NSLog(@"Conversion from %@ to %@ is not supported", oldExtension, newExtension);
         return nil;
     }
