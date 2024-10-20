@@ -6,6 +6,19 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		6B1222F92CC4CFB700AA4942 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1222EC2CC4CFB700AA4942 /* AppDelegate.m */; };
+		6B1222FA2CC4CFB700AA4942 /* ImageConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1222F02CC4CFB700AA4942 /* ImageConverter.m */; };
+		6B1222FB2CC4CFB700AA4942 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1222F12CC4CFB700AA4942 /* main.m */; };
+		6B1222FC2CC4CFB700AA4942 /* RenameController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1222F52CC4CFB700AA4942 /* RenameController.m */; };
+		6B1222FD2CC4CFB700AA4942 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1222F72CC4CFB700AA4942 /* ViewController.m */; };
+		6B1222FE2CC4CFB700AA4942 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B1222ED2CC4CFB700AA4942 /* Assets.xcassets */; };
+		6B1222FF2CC4CFB700AA4942 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B1222F32CC4CFB700AA4942 /* Main.storyboard */; };
+		6B1223022CC4CFC300AA4942 /* dotconvertTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1223002CC4CFC300AA4942 /* dotconvertTests.m */; };
+		6B1223062CC4CFC500AA4942 /* dotconvertUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1223032CC4CFC500AA4942 /* dotconvertUITests.m */; };
+		6B1223072CC4CFC500AA4942 /* dotconvertUITestsLaunchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1223042CC4CFC500AA4942 /* dotconvertUITestsLaunchTests.m */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		6B26B9C92CC46C03002E1EE9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,28 +37,25 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6B1222EB2CC4CFB700AA4942 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		6B1222EC2CC4CFB700AA4942 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		6B1222ED2CC4CFB700AA4942 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6B1222EE2CC4CFB700AA4942 /* dotconvert.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = dotconvert.entitlements; sourceTree = "<group>"; };
+		6B1222EF2CC4CFB700AA4942 /* ImageConverter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageConverter.h; sourceTree = "<group>"; };
+		6B1222F02CC4CFB700AA4942 /* ImageConverter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageConverter.m; sourceTree = "<group>"; };
+		6B1222F12CC4CFB700AA4942 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		6B1222F22CC4CFB700AA4942 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		6B1222F42CC4CFB700AA4942 /* RenameController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RenameController.h; sourceTree = "<group>"; };
+		6B1222F52CC4CFB700AA4942 /* RenameController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RenameController.m; sourceTree = "<group>"; };
+		6B1222F62CC4CFB700AA4942 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		6B1222F72CC4CFB700AA4942 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		6B1223002CC4CFC300AA4942 /* dotconvertTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = dotconvertTests.m; sourceTree = "<group>"; };
+		6B1223032CC4CFC500AA4942 /* dotconvertUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = dotconvertUITests.m; sourceTree = "<group>"; };
+		6B1223042CC4CFC500AA4942 /* dotconvertUITestsLaunchTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = dotconvertUITestsLaunchTests.m; sourceTree = "<group>"; };
 		6B26B9B32CC46C02002E1EE9 /* dotconvert.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dotconvert.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B26B9C82CC46C03002E1EE9 /* dotconvertTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dotconvertTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B26B9D22CC46C03002E1EE9 /* dotconvertUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dotconvertUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		6B26B9B52CC46C02002E1EE9 /* dotconvert */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = dotconvert;
-			sourceTree = "<group>";
-		};
-		6B26B9CB2CC46C03002E1EE9 /* dotconvertTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = dotconvertTests;
-			sourceTree = "<group>";
-		};
-		6B26B9D52CC46C03002E1EE9 /* dotconvertUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = dotconvertUITests;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		6B26B9B02CC46C02002E1EE9 /* Frameworks */ = {
@@ -72,12 +82,48 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6B1222F82CC4CFB700AA4942 /* dotconvert */ = {
+			isa = PBXGroup;
+			children = (
+				6B1222EB2CC4CFB700AA4942 /* AppDelegate.h */,
+				6B1222EC2CC4CFB700AA4942 /* AppDelegate.m */,
+				6B1222ED2CC4CFB700AA4942 /* Assets.xcassets */,
+				6B1222EE2CC4CFB700AA4942 /* dotconvert.entitlements */,
+				6B1222EF2CC4CFB700AA4942 /* ImageConverter.h */,
+				6B1222F02CC4CFB700AA4942 /* ImageConverter.m */,
+				6B1222F12CC4CFB700AA4942 /* main.m */,
+				6B1222F32CC4CFB700AA4942 /* Main.storyboard */,
+				6B1222F42CC4CFB700AA4942 /* RenameController.h */,
+				6B1222F52CC4CFB700AA4942 /* RenameController.m */,
+				6B1222F62CC4CFB700AA4942 /* ViewController.h */,
+				6B1222F72CC4CFB700AA4942 /* ViewController.m */,
+			);
+			path = dotconvert;
+			sourceTree = "<group>";
+		};
+		6B1223012CC4CFC300AA4942 /* dotconvertTests */ = {
+			isa = PBXGroup;
+			children = (
+				6B1223002CC4CFC300AA4942 /* dotconvertTests.m */,
+			);
+			path = dotconvertTests;
+			sourceTree = "<group>";
+		};
+		6B1223052CC4CFC500AA4942 /* dotconvertUITests */ = {
+			isa = PBXGroup;
+			children = (
+				6B1223032CC4CFC500AA4942 /* dotconvertUITests.m */,
+				6B1223042CC4CFC500AA4942 /* dotconvertUITestsLaunchTests.m */,
+			);
+			path = dotconvertUITests;
+			sourceTree = "<group>";
+		};
 		6B26B9AA2CC46C02002E1EE9 = {
 			isa = PBXGroup;
 			children = (
-				6B26B9B52CC46C02002E1EE9 /* dotconvert */,
-				6B26B9CB2CC46C03002E1EE9 /* dotconvertTests */,
-				6B26B9D52CC46C03002E1EE9 /* dotconvertUITests */,
+				6B1222F82CC4CFB700AA4942 /* dotconvert */,
+				6B1223012CC4CFC300AA4942 /* dotconvertTests */,
+				6B1223052CC4CFC500AA4942 /* dotconvertUITests */,
 				6B26B9B42CC46C02002E1EE9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -107,9 +153,6 @@
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				6B26B9B52CC46C02002E1EE9 /* dotconvert */,
-			);
 			name = dotconvert;
 			packageProductDependencies = (
 			);
@@ -130,9 +173,6 @@
 			dependencies = (
 				6B26B9CA2CC46C03002E1EE9 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				6B26B9CB2CC46C03002E1EE9 /* dotconvertTests */,
-			);
 			name = dotconvertTests;
 			packageProductDependencies = (
 			);
@@ -152,9 +192,6 @@
 			);
 			dependencies = (
 				6B26B9D42CC46C03002E1EE9 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				6B26B9D52CC46C03002E1EE9 /* dotconvertUITests */,
 			);
 			name = dotconvertUITests;
 			packageProductDependencies = (
@@ -211,6 +248,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B1222FE2CC4CFB700AA4942 /* Assets.xcassets in Resources */,
+				6B1222FF2CC4CFB700AA4942 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -235,6 +274,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B1222F92CC4CFB700AA4942 /* AppDelegate.m in Sources */,
+				6B1222FA2CC4CFB700AA4942 /* ImageConverter.m in Sources */,
+				6B1222FB2CC4CFB700AA4942 /* main.m in Sources */,
+				6B1222FC2CC4CFB700AA4942 /* RenameController.m in Sources */,
+				6B1222FD2CC4CFB700AA4942 /* ViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,6 +286,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B1223022CC4CFC300AA4942 /* dotconvertTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,6 +294,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B1223062CC4CFC500AA4942 /* dotconvertUITests.m in Sources */,
+				6B1223072CC4CFC500AA4942 /* dotconvertUITestsLaunchTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,6 +313,17 @@
 			targetProxy = 6B26B9D32CC46C03002E1EE9 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		6B1222F32CC4CFB700AA4942 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6B1222F22CC4CFB700AA4942 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		6B26B9DA2CC46C03002E1EE9 /* Debug */ = {
