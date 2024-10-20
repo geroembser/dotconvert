@@ -7,8 +7,9 @@
 
 #import "AppDelegate.h"
 #import "ViewController.h"
+#import <UserNotifications/UserNotifications.h>
 
-@interface AppDelegate ()
+@interface AppDelegate () <UNUserNotificationCenterDelegate>
 
 @property (strong, nonatomic) NSImage *defaultIcon;
 @property (strong, nonatomic) NSImage *checkmarkIcon;
@@ -23,6 +24,16 @@
     self.checkmarkIcon = [NSImage imageWithSystemSymbolName:@"checkmark.circle" accessibilityDescription:@"Conversion Done"];
     
     [self setupMenuBarItem];
+
+    // Request notification permission
+    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+    center.delegate = self;
+    [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert | UNAuthorizationOptionSound)
+                          completionHandler:^(BOOL granted, NSError * _Nullable error) {
+        if (!granted) {
+            NSLog(@"Notification permission denied");
+        }
+    }];
 
     // Register for notifications
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -58,8 +69,29 @@
 - (void)conversionDone:(NSNotification *)notification {
     self.statusItem.button.image = self.checkmarkIcon;
 
-    //print to console
+    // Print to console
     NSLog(@"Conversion done notification received");
+    
+    // Show push notification
+    NSDictionary *userInfo = notification.userInfo;
+    NSString *sourceFormat = userInfo[@"sourceFormat"];
+    NSString *targetFormat = userInfo[@"targetFormat"];
+    
+    UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+    content.title = @"Conversion Complete";
+    content.body = [NSString stringWithFormat:@"Converted from %@ to %@", sourceFormat, targetFormat];
+    content.sound = [UNNotificationSound defaultSound];
+    
+    UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:@"ConversionNotification"
+                                                                          content:content
+                                                                          trigger:nil];
+    
+    [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request
+                                                           withCompletionHandler:^(NSError * _Nullable error) {
+        if (error) {
+            NSLog(@"Error showing notification: %@", error.localizedDescription);
+        }
+    }];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         self.statusItem.button.image = self.defaultIcon;
@@ -72,6 +104,12 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+       willPresentNotification:(UNNotification *)notification
+         withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler {
+    completionHandler(UNNotificationPresentationOptionBanner | UNNotificationPresentationOptionSound);
 }
 
 @end

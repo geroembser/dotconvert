@@ -101,9 +101,12 @@
             if ([fileManager moveItemAtPath:convertedTempFilePath toPath:currentPath error:&error]) {
                 NSLog(@"Successfully replaced the original file with the converted file");
                 
-                // Dispatch the conversion done notification
+                // Dispatch the conversion done notification with source and target formats
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"ConversionDoneNotification" object:nil];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"ConversionDoneNotification"
+                                                                        object:nil
+                                                                      userInfo:@{@"sourceFormat": oldExtension,
+                                                                                 @"targetFormat": newExtension}];
                 });
             } else {
                 NSLog(@"Error moving converted file: %@", error.localizedDescription);
