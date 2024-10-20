@@ -100,6 +100,11 @@
             // Move the converted temp file to the original file's location
             if ([fileManager moveItemAtPath:convertedTempFilePath toPath:currentPath error:&error]) {
                 NSLog(@"Successfully replaced the original file with the converted file");
+                
+                // Dispatch the conversion done notification
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"ConversionDoneNotification" object:nil];
+                });
             } else {
                 NSLog(@"Error moving converted file: %@", error.localizedDescription);
             }

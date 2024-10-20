@@ -9,6 +9,6 @@
 
 @interface ViewController : NSViewController
 
+- (IBAction)selectDirectory:(id)sender;
 
 @end
-

@@ -22,20 +22,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Initialize the RenameController
     self.renameController = [[RenameController alloc] init];
+    
+    NSButton *selectButton = [[NSButton alloc] initWithFrame:NSMakeRect(50, 50, 200, 30)];
+    [selectButton setTitle:@"Select Directory"];
+    [selectButton setTarget:self];
+    [selectButton setAction:@selector(selectDirectory:)];
+    [self.view addSubview:selectButton];
 }
 
-- (void)setRepresentedObject:(id)representedObject {
-    [super setRepresentedObject:representedObject];
-
-    // Update the view, if already loaded.
-}
-
-- (IBAction)onstart:(id)sender {
+- (IBAction)selectDirectory:(id)sender {
     NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-    openPanel.canChooseFiles = NO;
     openPanel.canChooseDirectories = YES;
+    openPanel.canChooseFiles = NO;
     openPanel.allowsMultipleSelection = NO;
     openPanel.prompt = @"Select Folder to Monitor";
     
@@ -49,7 +48,6 @@
 }
 
 - (void)startMonitoringPath:(NSString *)path {
-    // Setup event stream directly since we have user-granted permission
     [self setupEventStreamForPath:path];
 }
 
