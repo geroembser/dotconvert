@@ -141,7 +141,7 @@
     );
     
     [self.completionWindow setFrameOrigin:windowPosition];
-    [self.completionWindow makeKeyAndOrderFront:nil];
+    [self.completionWindow orderFront:nil];
     
     // Hide completion window after 2 seconds
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -169,7 +169,7 @@
         );
         
         [self.progressWindow setFrameOrigin:windowPosition];
-        [self.progressWindow makeKeyAndOrderFront:nil];
+        [self.progressWindow orderFront:nil];
     });
 }
 
