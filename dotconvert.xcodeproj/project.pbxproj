@@ -17,6 +17,8 @@
 		6B1223022CC4CFC300AA4942 /* dotconvertTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1223002CC4CFC300AA4942 /* dotconvertTests.m */; };
 		6B1223062CC4CFC500AA4942 /* dotconvertUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1223032CC4CFC500AA4942 /* dotconvertUITests.m */; };
 		6B1223072CC4CFC500AA4942 /* dotconvertUITestsLaunchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1223042CC4CFC500AA4942 /* dotconvertUITestsLaunchTests.m */; };
+		6B6993392CD727C2003289A1 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B6993382CD727C2003289A1 /* SettingsViewController.m */; };
+		6B69933C2CD72DC8003289A1 /* md_rtf.py in Resources */ = {isa = PBXBuildFile; fileRef = 6B69933B2CD72DC3003289A1 /* md_rtf.py */; };
 		6B8CEED62CC4D6520037AD93 /* Pods_dotconvert.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 739530A3C30685B3A7A6D19D /* Pods_dotconvert.framework */; };
 		6B8CEED92CC4D7080037AD93 /* AudioConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B8CEED82CC4D7080037AD93 /* AudioConverter.m */; };
 		AD09418FF25CB75E208E6E5A /* Pods_dotconvert_dotconvertUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 874C80EBD48CB0F5E2619922 /* Pods_dotconvert_dotconvertUITests.framework */; };
@@ -62,6 +64,9 @@
 		6B26B9B32CC46C02002E1EE9 /* dotconvert.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dotconvert.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B26B9C82CC46C03002E1EE9 /* dotconvertTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dotconvertTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B26B9D22CC46C03002E1EE9 /* dotconvertUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = dotconvertUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6B6993372CD727C2003289A1 /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		6B6993382CD727C2003289A1 /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		6B69933B2CD72DC3003289A1 /* md_rtf.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = md_rtf.py; sourceTree = "<group>"; };
 		6B8CEECD2CC4D4DA0037AD93 /* ffmpegkit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = ffmpegkit.xcframework; path = "Pods/ffmpeg-kit-macos-full/ffmpegkit.xcframework"; sourceTree = "<group>"; };
 		6B8CEED72CC4D6F60037AD93 /* AudioConverter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioConverter.h; sourceTree = "<group>"; };
 		6B8CEED82CC4D7080037AD93 /* AudioConverter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioConverter.m; sourceTree = "<group>"; };
@@ -104,6 +109,7 @@
 		6B1222F82CC4CFB700AA4942 /* dotconvert */ = {
 			isa = PBXGroup;
 			children = (
+				6B69933A2CD72D90003289A1 /* pyconverters */,
 				6B1222EB2CC4CFB700AA4942 /* AppDelegate.h */,
 				6B1222EC2CC4CFB700AA4942 /* AppDelegate.m */,
 				6B1222ED2CC4CFB700AA4942 /* Assets.xcassets */,
@@ -118,6 +124,7 @@
 				6B1222F52CC4CFB700AA4942 /* RenameController.m */,
 				6B1222F62CC4CFB700AA4942 /* ViewController.h */,
 				6B1222F72CC4CFB700AA4942 /* ViewController.m */,
+				6B6993362CD72789003289A1 /* Settings */,
 			);
 			path = dotconvert;
 			sourceTree = "<group>";
@@ -159,6 +166,23 @@
 				6B26B9D22CC46C03002E1EE9 /* dotconvertUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		6B6993362CD72789003289A1 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				6B6993372CD727C2003289A1 /* SettingsViewController.h */,
+				6B6993382CD727C2003289A1 /* SettingsViewController.m */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		6B69933A2CD72D90003289A1 /* pyconverters */ = {
+			isa = PBXGroup;
+			children = (
+				6B69933B2CD72DC3003289A1 /* md_rtf.py */,
+			);
+			path = pyconverters;
 			sourceTree = "<group>";
 		};
 		740E3DB97D44F30C0B212A3E /* Pods */ = {
@@ -293,6 +317,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B69933C2CD72DC8003289A1 /* md_rtf.py in Resources */,
 				6B1222FE2CC4CFB700AA4942 /* Assets.xcassets in Resources */,
 				6B1222FF2CC4CFB700AA4942 /* Main.storyboard in Resources */,
 			);
@@ -428,6 +453,7 @@
 				6B1222FC2CC4CFB700AA4942 /* RenameController.m in Sources */,
 				6B1222FD2CC4CFB700AA4942 /* ViewController.m in Sources */,
 				6B8CEED92CC4D7080037AD93 /* AudioConverter.m in Sources */,
+				6B6993392CD727C2003289A1 /* SettingsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23094"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23504"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -717,7 +717,25 @@
                                     <url key="url" string="file:///Applications/"/>
                                 </pathCell>
                             </pathControl>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yY1-MO-C2x">
+                                <rect key="frame" x="420" y="228" width="30" height="23"/>
+                                <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSAdvanced" imagePosition="overlaps" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="EhJ-Vz-3P1">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="fAe-cq-wu9"/>
+                                </constraints>
+                                <connections>
+                                    <segue destination="WgM-Cd-aZR" kind="show" id="uQs-bf-cNa"/>
+                                </connections>
+                            </button>
                         </subviews>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="yY1-MO-C2x" secondAttribute="trailing" constant="31" id="Ro1-oB-VBp"/>
+                            <constraint firstItem="yY1-MO-C2x" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="20" symbolic="YES" id="SY8-xo-h22"/>
+                            <constraint firstItem="yY1-MO-C2x" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="oEG-J7-hme"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="pathControl" destination="QLc-tI-gP6" id="wuU-fJ-MAi"/>
@@ -727,5 +745,97 @@
             </objects>
             <point key="canvasLocation" x="75" y="655"/>
         </scene>
+        <!--Window Controller-->
+        <scene sceneID="8uG-3e-Nkq">
+            <objects>
+                <windowController id="WgM-Cd-aZR" sceneMemberID="viewController">
+                    <window key="window" title="Settings" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="OUL-E9-Tad">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="183" y="1430" width="480" height="270"/>
+                        <rect key="screenRect" x="-111" y="1117" width="1920" height="1055"/>
+                        <view key="contentView" id="l3o-cv-Fkd">
+                            <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </view>
+                        <connections>
+                            <outlet property="delegate" destination="WgM-Cd-aZR" id="cwR-GX-4kQ"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="yfd-lE-iOO" kind="relationship" relationship="window.shadowedContentViewController" id="bWl-b7-ILU"/>
+                    </connections>
+                </windowController>
+                <customObject id="dAM-E2-DzK" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="880" y="655"/>
+        </scene>
+        <!--Settings View Controller-->
+        <scene sceneID="2XY-es-TwX">
+            <objects>
+                <viewController id="yfd-lE-iOO" customClass="SettingsViewController" sceneMemberID="viewController">
+                    <view key="view" id="OCS-On-wiI">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="k4g-do-fdk">
+                                <rect key="frame" x="13" y="168" width="123" height="32"/>
+                                <buttonCell key="cell" type="push" title="Open in Finder" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="o9O-ah-2g9">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="onOpenPythonConvertersInFinder:" target="yfd-lE-iOO" id="L4t-ow-0q5"/>
+                                </connections>
+                            </button>
+                            <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="i3Q-Bg-jWS">
+                                <rect key="frame" x="18" y="203" width="452" height="32"/>
+                                <textFieldCell key="cell" selectable="YES" title="Click on this button to open the directory where you can setup custom python converters." id="R0m-gf-oew">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="XPb-6W-0fh">
+                                <rect key="frame" x="165" y="20" width="150" height="16"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Made with ❤️ in Zurich" id="Gdt-e8-GMm">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ygc-Zt-PCn">
+                                <rect key="frame" x="189" y="0.0" width="103" height="16"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="16" id="Adw-oO-BGJ"/>
+                                </constraints>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="by Sophia Edu Labs" id="jQt-eN-YIs">
+                                    <font key="font" metaFont="system" size="10"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="i3Q-Bg-jWS" secondAttribute="trailing" constant="12" id="0lt-H6-omt"/>
+                            <constraint firstItem="i3Q-Bg-jWS" firstAttribute="top" secondItem="OCS-On-wiI" secondAttribute="top" constant="35" id="CES-vD-VuW"/>
+                            <constraint firstItem="ygc-Zt-PCn" firstAttribute="top" secondItem="XPb-6W-0fh" secondAttribute="bottom" constant="4" id="Rhg-xa-GZ6"/>
+                            <constraint firstItem="XPb-6W-0fh" firstAttribute="centerX" secondItem="OCS-On-wiI" secondAttribute="centerX" id="UFU-yd-O9X"/>
+                            <constraint firstItem="ygc-Zt-PCn" firstAttribute="centerX" secondItem="OCS-On-wiI" secondAttribute="centerX" id="VAM-Ba-8q7"/>
+                            <constraint firstItem="i3Q-Bg-jWS" firstAttribute="leading" secondItem="OCS-On-wiI" secondAttribute="leading" constant="20" symbolic="YES" id="ZUv-Mk-jKx"/>
+                            <constraint firstItem="k4g-do-fdk" firstAttribute="leading" secondItem="i3Q-Bg-jWS" secondAttribute="leading" id="Zxx-9I-HMf"/>
+                            <constraint firstAttribute="bottom" secondItem="ygc-Zt-PCn" secondAttribute="bottom" id="eNj-oO-89i"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="k4g-do-fdk" secondAttribute="trailing" constant="20" symbolic="YES" id="ijR-H1-gJi"/>
+                            <constraint firstItem="k4g-do-fdk" firstAttribute="top" secondItem="i3Q-Bg-jWS" secondAttribute="bottom" constant="8" symbolic="YES" id="jEU-zR-k37"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <customObject id="0k1-8e-QAI" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="880" y="1186"/>
+        </scene>
     </scenes>
+    <resources>
+        <image name="NSAdvanced" width="32" height="32"/>
+    </resources>
 </document>
