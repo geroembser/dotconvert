@@ -142,6 +142,20 @@ static NSString * const kAsyncConversionInProgress = @"AsyncConversionInProgress
     if (config) {
         NSLog(@"Python converter available for %@ to %@: %@", oldExtension, newExtension, config);
         // return nil; // TODO: Implement actual Python conversion
+        [self.pythonConverter convertFile:filePath withConfig:config completionHandler:^(NSString *outputPath, NSError *error) {
+            if (error) {
+                NSLog(@"Python conversion failed: %@", error.localizedDescription);
+                // Post notification for conversion failure
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"ConversionFailedNotification" 
+                                                                    object:nil 
+                                                                  userInfo:@{@"error": error}];
+            } else {
+                NSLog(@"Python conversion successful. Output file: %@", outputPath);
+                [self handleSuccessfulConversion:outputPath originalPath:filePath];
+            }
+        }];
+
+        return kAsyncConversionInProgress; // Return special value for async conversion
     }
 
     //JPG -> PNG

@@ -34,14 +34,7 @@ def markdown_to_rtf(text):
 
     return rtf_text
 
-def convert_markdown_file_to_rtf(input_file, tmp_dir):
-    # Extract the original filename without the extension
-    original_filename = os.path.basename(input_file)
-    filename_without_ext = os.path.splitext(original_filename)[0]
-
-    # Construct the new file path in the temporary directory with .rtf extension
-    output_file = os.path.join(tmp_dir, f"{filename_without_ext}.rtf")
-
+def convert_markdown_file_to_rtf(input_file, output_file):
     # Read the Markdown file content
     with open(input_file, 'r', encoding='utf-8') as f:
         markdown_content = f.read()
@@ -57,8 +50,8 @@ def convert_markdown_file_to_rtf(input_file, tmp_dir):
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print("Usage: python script.py <input_markdown_file> <tmp_directory>")
+        print("Usage: python script.py <input_markdown_file> <output_rtf_file>")
     else:
         input_file = sys.argv[1]
-        tmp_dir = sys.argv[2]
-        convert_markdown_file_to_rtf(input_file, tmp_dir)
+        output_file = sys.argv[2]
+        convert_markdown_file_to_rtf(input_file, output_file)
