@@ -164,7 +164,7 @@ static NSString * const kAsyncConversionInProgress = @"AsyncConversionInProgress
                                                             object:nil 
                                                             userInfo:userInfo];
 
-        NSLog(@"Conversion from %@ to %@ is not supported", oldExtension, newExtension);
+        NSLog(@"Conversion from %@ to %@ is not supported (file: %@)", oldExtension, newExtension, filePath);
         return nil;
     }
 }
