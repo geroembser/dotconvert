@@ -11,5 +11,7 @@
 
 @property (strong, nonatomic) NSStatusItem *statusItem;
 @property (strong, nonatomic) NSPopover *popover;
+@property (strong, nonatomic) NSWindow *progressWindow;
+@property (strong, nonatomic) NSWindow *completionWindow;
 
 @end

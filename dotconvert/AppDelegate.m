@@ -77,50 +77,133 @@
     }
 }
 
-- (void)conversionStarted:(NSNotification *)notification {
-    NSLog(@"Conversion started notification received");
+// Add this method after setupMenuBarItem
+- (void)setupProgressWindow {
+    self.progressWindow = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 40)
+                                                    styleMask:NSWindowStyleMaskBorderless
+                                                      backing:NSBackingStoreBuffered
+                                                        defer:NO];
+    
+    self.progressWindow.backgroundColor = [NSColor controlBackgroundColor];
+    self.progressWindow.level = NSFloatingWindowLevel;
+    
+    NSTextField *label = [[NSTextField alloc] initWithFrame:NSMakeRect(10, 10, 180, 20)];
+    label.stringValue = @"Conversion in progress...";
+    label.bezeled = NO;
+    label.drawsBackground = NO;
+    label.editable = NO;
+    label.selectable = NO;
+    
+    [self.progressWindow.contentView addSubview:label];
+}
+- (void)setupCompletionWindow {
+    self.completionWindow = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 40)
+                                                      styleMask:NSWindowStyleMaskBorderless
+                                                        backing:NSBackingStoreBuffered
+                                                          defer:NO];
+    
+    self.completionWindow.backgroundColor = [NSColor controlBackgroundColor];
+    self.completionWindow.level = NSFloatingWindowLevel;
+    
+    NSTextField *label = [[NSTextField alloc] initWithFrame:NSMakeRect(10, 10, 180, 20)];
+    label.stringValue = @"Conversion completed!";
+    label.bezeled = NO;
+    label.drawsBackground = NO;
+    label.editable = NO;
+    label.selectable = NO;
+    
+    [self.completionWindow.contentView addSubview:label];
+}
 
-    dispatch_async(dispatch_get_main_queue(), ^{
-        self.statusItem.button.image = self.conversionIcon;
+- (void)showCompletionWindow {
+   // Show completion window
+    if (!self.completionWindow) {
+        [self setupCompletionWindow];
+    }
+    
+    // Position completion window
+    NSRect statusItemRect = [self.statusItem.button.window convertRectToScreen:self.statusItem.button.frame];
+    NSRect completionFrame = self.completionWindow.frame;
+    NSPoint windowPosition = NSMakePoint(
+        statusItemRect.origin.x - (completionFrame.size.width - statusItemRect.size.width) / 2,
+        statusItemRect.origin.y - completionFrame.size.height - 5
+    );
+    
+    [self.completionWindow setFrameOrigin:windowPosition];
+    [self.completionWindow makeKeyAndOrderFront:nil];
+    
+    // Hide completion window after 2 seconds
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.completionWindow orderOut:nil];
     });
 }
 
+- (void)conversionStarted:(NSNotification *)notification {
+     NSLog(@"Conversion started notification received");
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.statusItem.button.image = self.conversionIcon;
+        
+        // Show progress window
+        if (!self.progressWindow) {
+            [self setupProgressWindow];
+        }
+        
+        // Position window above status item
+        NSRect statusItemRect = [self.statusItem.button.window convertRectToScreen:self.statusItem.button.frame];
+        NSRect progressFrame = self.progressWindow.frame;
+        NSPoint windowPosition = NSMakePoint(
+            statusItemRect.origin.x - (progressFrame.size.width - statusItemRect.size.width) / 2,
+            statusItemRect.origin.y - progressFrame.size.height - 5
+        );
+        
+        [self.progressWindow setFrameOrigin:windowPosition];
+        [self.progressWindow makeKeyAndOrderFront:nil];
+    });
+}
+
+// Modify conversionDone: method
 - (void)conversionDone:(NSNotification *)notification {
     dispatch_async(dispatch_get_main_queue(), ^{
-    self.statusItem.button.image = self.checkmarkIcon;
-    
-    // Print to console
-    NSLog(@"Conversion done notification received");
-    
-    // Show push notification
-    NSDictionary *userInfo = notification.userInfo;
-    NSString *sourceFormat = userInfo[@"sourceFormat"];
-    NSString *targetFormat = userInfo[@"targetFormat"];
-    
-    UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
-    content.title = @"Conversion Complete";
-    content.body = [NSString stringWithFormat:@"Converted from %@ to %@", sourceFormat, targetFormat];
-    content.sound = [UNNotificationSound defaultSound];
-    
-    UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:@"ConversionNotification"
-                                                            content:content
-                                                            trigger:nil];
-    
-    [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request
-                                                                        withCompletionHandler:^(NSError * _Nullable error) {
-        if (error) {
-            NSLog(@"Error showing notification: %@", error.localizedDescription);
-        }
-    }];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        self.statusItem.button.image = self.defaultIcon;
-    });
+        // Hide progress window
+        [self.progressWindow orderOut:nil];
+        
+        [self showCompletionWindow];
+        
+        self.statusItem.button.image = self.checkmarkIcon;
+        
+        // Rest of the existing notification code...
+        NSDictionary *userInfo = notification.userInfo;
+        NSString *sourceFormat = userInfo[@"sourceFormat"];
+        NSString *targetFormat = userInfo[@"targetFormat"];
+        
+        UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+        content.title = @"Conversion Complete";
+        content.body = [NSString stringWithFormat:@"Converted from %@ to %@", sourceFormat, targetFormat];
+        content.sound = [UNNotificationSound defaultSound];
+        
+        UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:@"ConversionNotification"
+                                                                            content:content
+                                                                            trigger:nil];
+        
+        [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request
+                                                               withCompletionHandler:^(NSError * _Nullable error) {
+            if (error) {
+                NSLog(@"Error showing notification: %@", error.localizedDescription);
+            }
+        }];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            self.statusItem.button.image = self.defaultIcon;
+        });
     });
 }
 
 - (void)conversionNotSupported:(NSNotification *)notification {
     dispatch_async(dispatch_get_main_queue(), ^{
+        // Hide progress window if shown
+        [self.progressWindow orderOut:nil];
+        
         self.statusItem.button.image = self.defaultIcon;
         
         // Print to console
