@@ -51,7 +51,7 @@
 
     NSString *outputPath = [self createTemporaryFilePathWithExtension:@"ogg"];
     
-    NSString *ffmpegCommand = [NSString stringWithFormat:@"-i %@ -c:a libvorbis -q:a 4 %@", self.filePath, outputPath];
+    NSString *ffmpegCommand = [NSString stringWithFormat:@"-i \"%@\" -c:a libvorbis -q:a 4 \"%@\"", self.filePath, outputPath];
     
     [FFmpegKit executeAsync:ffmpegCommand withCompleteCallback:^(FFmpegSession* session) {
         ReturnCode *returnCode = [session getReturnCode];
@@ -78,7 +78,7 @@
 
     NSString *outputPath = [self createTemporaryFilePathWithExtension:@"mp3"];
     
-    NSString *ffmpegCommand = [NSString stringWithFormat:@"-i %@ -acodec libmp3lame -b:a 192k %@", self.filePath, outputPath];
+    NSString *ffmpegCommand = [NSString stringWithFormat:@"-i \"%@\" -acodec libmp3lame -b:a 192k \"%@\"", self.filePath, outputPath];
     
     [FFmpegKit executeAsync:ffmpegCommand withCompleteCallback:^(FFmpegSession* session) {
         ReturnCode *returnCode = [session getReturnCode];
@@ -105,7 +105,7 @@
 
     NSString *outputPath = [self createTemporaryFilePathWithExtension:@"m4a"];
     
-    NSString *ffmpegCommand = [NSString stringWithFormat:@"-i %@ -c:a aac -b:a 192k %@", self.filePath, outputPath];
+    NSString *ffmpegCommand = [NSString stringWithFormat:@"-i \"%@\" -c:a aac -b:a 192k \"%@\"", self.filePath, outputPath];
     
     [FFmpegKit executeAsync:ffmpegCommand withCompleteCallback:^(FFmpegSession* session) {
         ReturnCode *returnCode = [session getReturnCode];
@@ -132,7 +132,7 @@
 
     NSString *outputPath = [self createTemporaryFilePathWithExtension:@"mp3"];
     
-    NSString *ffmpegCommand = [NSString stringWithFormat:@"-i %@ -acodec libmp3lame -b:a 192k %@", self.filePath, outputPath];
+    NSString *ffmpegCommand = [NSString stringWithFormat:@"-i \"%@\" -acodec libmp3lame -b:a 192k \"%@\"", self.filePath, outputPath];
     
     [FFmpegKit executeAsync:ffmpegCommand withCompleteCallback:^(FFmpegSession* session) {
         ReturnCode *returnCode = [session getReturnCode];
