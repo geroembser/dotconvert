@@ -59,13 +59,21 @@
     // Combine script path with app directory
     NSString *scriptPath = [appURL.path stringByAppendingPathComponent:conversion[@"script"]];
     
-    // Return configuration dictionary
-    return @{
+    // Return configuration dictionary with required fields
+    NSMutableDictionary *config = [@{
         @"sourceFormat": sourceFormat,
         @"targetFormat": targetFormat,
         @"interpreter": conversion[@"interpreter"],
         @"script": scriptPath
-    };
+    } mutableCopy];
+    
+    // Only add envs if it exists and is not nil
+    id envs = conversion[@"envs"];
+    if (envs && ![envs isKindOfClass:[NSNull class]]) {
+        config[@"envs"] = envs;
+    }
+    
+    return config;
 }
 
 - (NSString *)createTemporaryFilePathWithExtension:(NSString *)extension {
@@ -85,6 +93,14 @@
     NSTask *task = [[NSTask alloc] init];
     task.launchPath = config[@"interpreter"];
     task.arguments = @[config[@"script"], inputPath, outputPath];
+    
+    // Set environment variables if they exist in config
+    NSDictionary *envs = config[@"envs"];
+    if (envs) {
+        NSMutableDictionary *environment = [NSMutableDictionary dictionaryWithDictionary:[[NSProcessInfo processInfo] environment]];
+        [environment addEntriesFromDictionary:envs];
+        task.environment = environment;
+    }
     
     // Set up pipe for error output
     NSPipe *errorPipe = [NSPipe pipe];
