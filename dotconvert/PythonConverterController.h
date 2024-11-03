@@ -2,7 +2,8 @@
 
 @interface PythonConverterController : NSObject
 
-- (instancetype)init;
++ (instancetype)sharedController;
+- (void)reloadFormatsConfig;
 - (NSDictionary *)getConverterConfigForSourceFormat:(NSString *)sourceFormat 
                                       targetFormat:(NSString *)targetFormat;
 - (void)convertFile:(NSString *)inputPath 

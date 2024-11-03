@@ -6,6 +6,7 @@
 //
 
 #import "SettingsViewController.h"
+#import "PythonConverterController.h"
 
 @interface SettingsViewController ()
 
@@ -50,6 +51,9 @@
             }
         };
         [defaultValues writeToFile:formatsPlistPath atomically:YES];
+        
+        // Reload the formats configuration
+        [[PythonConverterController sharedController] reloadFormatsConfig];
 
         //copy the example md_rtf.py script to the app directory, but only if it doesn't exist yet
         NSString *exampleScriptPath = [[NSBundle mainBundle] pathForResource:@"md_rtf" ofType:@"py"];

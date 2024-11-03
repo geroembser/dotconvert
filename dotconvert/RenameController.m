@@ -11,7 +11,7 @@ static NSString * const kAsyncConversionInProgress = @"AsyncConversionInProgress
 @interface RenameController ()
 
 @property (nonatomic, strong) NSMutableArray<NSDictionary *> *recentEvents;
-@property (nonatomic, strong) PythonConverterController *pythonConverter;
+@property (nonatomic, weak) PythonConverterController *pythonConverter;
 
 @end
 
@@ -21,7 +21,7 @@ static NSString * const kAsyncConversionInProgress = @"AsyncConversionInProgress
     self = [super init];
     if (self) {
         _recentEvents = [NSMutableArray arrayWithCapacity:10];
-        _pythonConverter = [[PythonConverterController alloc] init];
+        _pythonConverter = [PythonConverterController sharedController];
     }
     return self;
 }

@@ -6,22 +6,19 @@
 
 @implementation PythonConverterController
 
++ (instancetype)sharedController {
+    static PythonConverterController *sharedController = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedController = [[self alloc] init];
+    });
+    return sharedController;
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {
-        // Get Application Support directory URL
-        NSURL *appSupportURL = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory
-                                                                    inDomain:NSUserDomainMask
-                                                           appropriateForURL:nil
-                                                                    create:NO
-                                                                     error:nil];
-        NSURL *appURL = [appSupportURL URLByAppendingPathComponent:@"dotconvert"];
-        
-        // Load formats.plist if it exists
-        NSString *formatsPlistPath = [appURL.path stringByAppendingPathComponent:@"formats.plist"];
-        if ([[NSFileManager defaultManager] fileExistsAtPath:formatsPlistPath]) {
-            self.formatsConfig = [NSDictionary dictionaryWithContentsOfFile:formatsPlistPath];
-        }
+        [self reloadFormatsConfig];
     }
     return self;
 }
@@ -121,6 +118,25 @@
             NSLocalizedDescriptionKey: exception.reason ?: @"Failed to launch Python converter"
         }];
         completionHandler(nil, error);
+    }
+}
+
+- (void)reloadFormatsConfig {
+    NSURL *appSupportURL = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory
+                                                                inDomain:NSUserDomainMask
+                                                       appropriateForURL:nil
+                                                                create:NO
+                                                                 error:nil];
+    NSURL *appURL = [appSupportURL URLByAppendingPathComponent:@"dotconvert"];
+    
+    // Load formats.plist if it exists
+    NSString *formatsPlistPath = [appURL.path stringByAppendingPathComponent:@"formats.plist"];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:formatsPlistPath]) {
+        self.formatsConfig = [NSDictionary dictionaryWithContentsOfFile:formatsPlistPath];
+        NSLog(@"Reloaded formats configuration: %@", self.formatsConfig);
+    } else {
+        NSLog(@"No formats.plist found at path: %@", formatsPlistPath);
+        self.formatsConfig = nil;
     }
 }
 
