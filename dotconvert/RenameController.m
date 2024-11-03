@@ -3,6 +3,7 @@
 #import <AppKit/AppKit.h>
 #import "ImageConverter.h"
 #import "AudioConverter.h"
+#import "PythonConverterController.h"
 
 // At the top of the file, add this constant:
 static NSString * const kAsyncConversionInProgress = @"AsyncConversionInProgress";
@@ -10,6 +11,7 @@ static NSString * const kAsyncConversionInProgress = @"AsyncConversionInProgress
 @interface RenameController ()
 
 @property (nonatomic, strong) NSMutableArray<NSDictionary *> *recentEvents;
+@property (nonatomic, strong) PythonConverterController *pythonConverter;
 
 @end
 
@@ -19,6 +21,7 @@ static NSString * const kAsyncConversionInProgress = @"AsyncConversionInProgress
     self = [super init];
     if (self) {
         _recentEvents = [NSMutableArray arrayWithCapacity:10];
+        _pythonConverter = [[PythonConverterController alloc] init];
     }
     return self;
 }
@@ -132,6 +135,14 @@ static NSString * const kAsyncConversionInProgress = @"AsyncConversionInProgress
 - (NSString *)convert:(NSString *)filePath oldExtension:(NSString *)oldExtension newExtension:(NSString *)newExtension {
     // Post notification that conversion has started
     [[NSNotificationCenter defaultCenter] postNotificationName:@"ConversionStartedNotification" object:nil];
+
+    // Check for Python converter first
+    NSDictionary *config = [self.pythonConverter getConverterConfigForSourceFormat:oldExtension 
+                                                                    targetFormat:newExtension];
+    if (config) {
+        NSLog(@"Python converter available for %@ to %@: %@", oldExtension, newExtension, config);
+        // return nil; // TODO: Implement actual Python conversion
+    }
 
     //JPG -> PNG
     if ([oldExtension.lowercaseString isEqualToString:@"jpg"] && [newExtension.lowercaseString isEqualToString:@"png"]) {

@@ -19,6 +19,7 @@
 		6B1223072CC4CFC500AA4942 /* dotconvertUITestsLaunchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1223042CC4CFC500AA4942 /* dotconvertUITestsLaunchTests.m */; };
 		6B6993392CD727C2003289A1 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B6993382CD727C2003289A1 /* SettingsViewController.m */; };
 		6B69933C2CD72DC8003289A1 /* md_rtf.py in Resources */ = {isa = PBXBuildFile; fileRef = 6B69933B2CD72DC3003289A1 /* md_rtf.py */; };
+		6B69933F2CD73154003289A1 /* PythonConverterController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B69933E2CD73154003289A1 /* PythonConverterController.m */; };
 		6B8CEED62CC4D6520037AD93 /* Pods_dotconvert.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 739530A3C30685B3A7A6D19D /* Pods_dotconvert.framework */; };
 		6B8CEED92CC4D7080037AD93 /* AudioConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B8CEED82CC4D7080037AD93 /* AudioConverter.m */; };
 		AD09418FF25CB75E208E6E5A /* Pods_dotconvert_dotconvertUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 874C80EBD48CB0F5E2619922 /* Pods_dotconvert_dotconvertUITests.framework */; };
@@ -67,6 +68,8 @@
 		6B6993372CD727C2003289A1 /* SettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		6B6993382CD727C2003289A1 /* SettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		6B69933B2CD72DC3003289A1 /* md_rtf.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = md_rtf.py; sourceTree = "<group>"; };
+		6B69933D2CD73154003289A1 /* PythonConverterController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PythonConverterController.h; sourceTree = "<group>"; };
+		6B69933E2CD73154003289A1 /* PythonConverterController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PythonConverterController.m; sourceTree = "<group>"; };
 		6B8CEECD2CC4D4DA0037AD93 /* ffmpegkit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = ffmpegkit.xcframework; path = "Pods/ffmpeg-kit-macos-full/ffmpegkit.xcframework"; sourceTree = "<group>"; };
 		6B8CEED72CC4D6F60037AD93 /* AudioConverter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioConverter.h; sourceTree = "<group>"; };
 		6B8CEED82CC4D7080037AD93 /* AudioConverter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioConverter.m; sourceTree = "<group>"; };
@@ -122,6 +125,8 @@
 				6B1222F32CC4CFB700AA4942 /* Main.storyboard */,
 				6B1222F42CC4CFB700AA4942 /* RenameController.h */,
 				6B1222F52CC4CFB700AA4942 /* RenameController.m */,
+				6B69933D2CD73154003289A1 /* PythonConverterController.h */,
+				6B69933E2CD73154003289A1 /* PythonConverterController.m */,
 				6B1222F62CC4CFB700AA4942 /* ViewController.h */,
 				6B1222F72CC4CFB700AA4942 /* ViewController.m */,
 				6B6993362CD72789003289A1 /* Settings */,
@@ -451,6 +456,7 @@
 				6B1222FA2CC4CFB700AA4942 /* ImageConverter.m in Sources */,
 				6B1222FB2CC4CFB700AA4942 /* main.m in Sources */,
 				6B1222FC2CC4CFB700AA4942 /* RenameController.m in Sources */,
+				6B69933F2CD73154003289A1 /* PythonConverterController.m in Sources */,
 				6B1222FD2CC4CFB700AA4942 /* ViewController.m in Sources */,
 				6B8CEED92CC4D7080037AD93 /* AudioConverter.m in Sources */,
 				6B6993392CD727C2003289A1 /* SettingsViewController.m in Sources */,
