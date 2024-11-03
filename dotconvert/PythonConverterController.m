@@ -45,12 +45,16 @@
     }
     
     // Get Application Support directory for script path
+
     NSURL *appSupportURL = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory
                                                                 inDomain:NSUserDomainMask
                                                        appropriateForURL:nil
                                                                 create:NO
                                                                  error:nil];
-    NSURL *appURL = [appSupportURL URLByAppendingPathComponent:@"dotconvert"];
+
+    //bundle id
+    NSString *bundleId = [[NSBundle mainBundle] bundleIdentifier];
+    NSURL *appURL = [appSupportURL URLByAppendingPathComponent:bundleId];
     
     // Combine script path with app directory
     NSString *scriptPath = [appURL.path stringByAppendingPathComponent:conversion[@"script"]];
@@ -127,7 +131,8 @@
                                                        appropriateForURL:nil
                                                                 create:NO
                                                                  error:nil];
-    NSURL *appURL = [appSupportURL URLByAppendingPathComponent:@"dotconvert"];
+    NSString *bundleId = [[NSBundle mainBundle] bundleIdentifier];
+    NSURL *appURL = [appSupportURL URLByAppendingPathComponent:bundleId];
     
     // Load formats.plist if it exists
     NSString *formatsPlistPath = [appURL.path stringByAppendingPathComponent:@"formats.plist"];

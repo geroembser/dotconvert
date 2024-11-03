@@ -24,7 +24,8 @@
                                                        appropriateForURL:nil
                                                                 create:YES
                                                                  error:nil];
-    NSURL *appURL = [appSupportURL URLByAppendingPathComponent:@"dotconvert"];
+    NSString *bundleId = [[NSBundle mainBundle] bundleIdentifier];
+    NSURL *appURL = [appSupportURL URLByAppendingPathComponent:bundleId];
 
     NSLog(@"App URL: %@", appURL);
     
