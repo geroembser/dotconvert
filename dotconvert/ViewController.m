@@ -60,27 +60,66 @@
 - (void)setupEventStreamForPath:(NSString *)path {
     // Stop any existing stream
     [self stopMonitoring];
+
+    // Get the sandboxed home directory
+    NSString *sandboxedHome = NSHomeDirectory();
+    // Extract real home directory by taking first two path components
+    NSArray *pathComponents = [sandboxedHome pathComponents];
+    NSString *homeDirectory = [NSString pathWithComponents:[pathComponents subarrayWithRange:NSMakeRange(0, 3)]];
+
+    NSLog(@"Home directory: %@", homeDirectory);
+    
+    // Define the paths we want to monitor
+    NSArray *subPathsToMonitorForHomeDir = @[
+        @"Desktop",
+        @"Documents",
+        @"Downloads",
+        @"Movies",
+        @"Music",
+        @"Pictures",
+        @"Library/Mobile Documents/com~apple~CloudDocs/Documents",
+        @"Library/Mobile Documents/com~apple~CloudDocs/Desktop"
+    ];
+    
+    // Create full paths and filter existing ones
+    NSMutableArray *pathsToWatch = [NSMutableArray array];
+
+    if ([path isEqualToString:homeDirectory]) {
+        for (NSString *subPath in subPathsToMonitorForHomeDir) {
+            NSString *fullPath = [homeDirectory stringByAppendingPathComponent:subPath];
+            if ([[NSFileManager defaultManager] fileExistsAtPath:fullPath]) {
+                [pathsToWatch addObject:fullPath];
+            }
+        }
+    }
+    
+    // Only proceed if we have paths to watch
+    if (pathsToWatch.count == 0) {
+        //just watch the given path if no valid paths are found
+        [pathsToWatch addObject:path];
+    }
+
+    // NSLog(@"Watching paths: %@", pathsToWatch);
     
     // Create and start the new stream
     FSEventStreamContext context = {0, (__bridge void *)(self), NULL, NULL, NULL};
-    CFArrayRef pathsToWatch = (__bridge CFArrayRef)@[path];
     
     self.eventStream = FSEventStreamCreate(NULL,
-                                           &fsEventsCallback,
-                                           &context,
-                                           pathsToWatch,
-                                           kFSEventStreamEventIdSinceNow,
-                                           0.3,  // 300 ms latency
-                                           kFSEventStreamCreateFlagFileEvents | 
-                                           kFSEventStreamCreateFlagMarkSelf |
-                                           kFSEventStreamCreateFlagUseCFTypes |
-                                           kFSEventStreamCreateFlagUseExtendedData |
-                                           kFSEventStreamCreateWithDocID);
+                                         &fsEventsCallback,
+                                         &context,
+                                         (__bridge CFArrayRef)pathsToWatch,
+                                         kFSEventStreamEventIdSinceNow,
+                                         0.3,  // 300 ms latency
+                                         kFSEventStreamCreateFlagFileEvents | 
+                                         kFSEventStreamCreateFlagMarkSelf |
+                                         kFSEventStreamCreateFlagUseCFTypes |
+                                         kFSEventStreamCreateFlagUseExtendedData |
+                                         kFSEventStreamCreateWithDocID);
     
     if (self.eventStream) {
         FSEventStreamScheduleWithRunLoop(self.eventStream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
         FSEventStreamStart(self.eventStream);
-        NSLog(@"Started monitoring path: %@", path);
+        NSLog(@"Started monitoring paths: %@", pathsToWatch);
     } else {
         NSLog(@"Failed to create FSEventStream");
     }
