@@ -77,9 +77,8 @@
     }
 }
 
-// Add this method after setupMenuBarItem
 - (void)setupProgressWindow {
-    self.progressWindow = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 40)
+    self.progressWindow = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 70)
                                                     styleMask:NSWindowStyleMaskBorderless
                                                       backing:NSBackingStoreBuffered
                                                         defer:NO];
@@ -87,15 +86,27 @@
     self.progressWindow.backgroundColor = [NSColor controlBackgroundColor];
     self.progressWindow.level = NSFloatingWindowLevel;
     
-    NSTextField *label = [[NSTextField alloc] initWithFrame:NSMakeRect(10, 10, 180, 20)];
+    NSTextField *label = [[NSTextField alloc] initWithFrame:NSMakeRect(10, 40, 180, 20)];
     label.stringValue = @"Conversion in progress...";
     label.bezeled = NO;
     label.drawsBackground = NO;
     label.editable = NO;
     label.selectable = NO;
     
+    NSButton *linkButton = [[NSButton alloc] initWithFrame:NSMakeRect(10, 10, 180, 20)];
+    [linkButton setTitle:@"Learned your maths today?"];
+    [linkButton setButtonType:NSButtonTypeMomentaryLight];
+    [linkButton setBordered:NO];
+    [linkButton setTarget:self];
+    [linkButton setAction:@selector(openWaitingURL:)];
+    [linkButton.cell setBackgroundColor:[NSColor clearColor]];
+    [linkButton setAttributedTitle:[[NSAttributedString alloc] initWithString:@"Learned your maths today?" 
+        attributes:@{NSForegroundColorAttributeName: [NSColor linkColor]}]];
+    
     [self.progressWindow.contentView addSubview:label];
+    [self.progressWindow.contentView addSubview:linkButton];
 }
+
 - (void)setupCompletionWindow {
     self.completionWindow = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 200, 40)
                                                       styleMask:NSWindowStyleMaskBorderless
@@ -162,7 +173,6 @@
     });
 }
 
-// Modify conversionDone: method
 - (void)conversionDone:(NSNotification *)notification {
     dispatch_async(dispatch_get_main_queue(), ^{
         // Hide progress window
@@ -244,6 +254,10 @@
        willPresentNotification:(UNNotification *)notification
          withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler {
     completionHandler(UNNotificationPresentationOptionBanner | UNNotificationPresentationOptionSound);
+}
+
+- (void)openWaitingURL:(id)sender {
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://swipemath.com"]];
 }
 
 @end
