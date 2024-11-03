@@ -84,6 +84,60 @@ static NSString * const kAsyncConversionInProgress = @"AsyncConversionInProgress
     return [ext1.lowercaseString isEqualToString:ext2.lowercaseString];
 }
 
+-(void)moveConvertedFile:(NSString *)convertedTempFilePath currentPath:(NSString *)currentPath oldExtension:(NSString *)oldExtension newExtension:(NSString *)newExtension {
+    NSError *error = nil;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    // Create a temporary directory URL
+    NSURL *currentURL = [NSURL fileURLWithPath:currentPath];
+    NSURL *tempDirURL = [fileManager URLForDirectory:NSItemReplacementDirectory
+                                            inDomain:NSUserDomainMask
+                                    appropriateForURL:currentURL
+                                            create:YES
+                                            error:&error];
+    
+    if (!tempDirURL) {
+        NSLog(@"Error creating temporary directory: %@", error.localizedDescription);
+        return;
+    }
+    
+    // Get the original filename without extension
+    NSString *originalFilename = [[currentURL lastPathComponent] stringByDeletingPathExtension];
+    
+    // Create temporary path with old extension 
+    NSString *tempPath = [[tempDirURL path] stringByAppendingPathComponent:originalFilename];
+    tempPath = [tempPath stringByAppendingPathExtension:oldExtension];
+    
+    // First move original file to temp location with old extension
+    if ([fileManager moveItemAtPath:currentPath toPath:tempPath error:&error]) {
+        // Then move converted file to original location
+        if ([fileManager moveItemAtPath:convertedTempFilePath toPath:currentPath error:&error]) {
+            // Finally, trash the temp file with old extension
+            NSURL *tempFileURL = [NSURL fileURLWithPath:tempPath];
+            if ([fileManager trashItemAtURL:tempFileURL resultingItemURL:nil error:&error]) {
+                NSLog(@"Successfully replaced the original file with the converted file");
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"ConversionDoneNotification"
+                                                                    object:nil
+                                                                    userInfo:@{@"sourceFormat": oldExtension,
+                                                                            @"targetFormat": newExtension}];
+                });
+            } else {
+                NSLog(@"Error moving temp file to trash: %@", error.localizedDescription);
+            }
+        } else {
+            NSLog(@"Error moving converted file: %@", error.localizedDescription);
+            // Try to restore original file if convert move failed
+            [fileManager moveItemAtPath:tempPath toPath:currentPath error:nil];
+        }
+    } else {
+        NSLog(@"Error moving original file to temp location: %@", error.localizedDescription);
+        // Clean up the converted temp file if we couldn't move the original
+        [fileManager removeItemAtPath:convertedTempFilePath error:nil];
+    }
+}
+
 - (void)performRenameActionWithFileId:(uint64_t)fileId oldPath:(NSString *)oldPath currentPath:(NSString *)currentPath {
     NSString *oldExtension = [oldPath pathExtension];
     NSString *newExtension = [currentPath pathExtension];
@@ -104,31 +158,7 @@ static NSString * const kAsyncConversionInProgress = @"AsyncConversionInProgress
     }
     
     if (convertedTempFilePath) {
-        NSError *error = nil;
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        
-        // Move the original file to trash
-        NSURL *originalFileURL = [NSURL fileURLWithPath:currentPath];
-        if ([fileManager trashItemAtURL:originalFileURL resultingItemURL:nil error:&error]) {
-            // Move the converted temp file to the original file's location
-            if ([fileManager moveItemAtPath:convertedTempFilePath toPath:currentPath error:&error]) {
-                NSLog(@"Successfully replaced the original file with the converted file");
-                
-                // Dispatch the conversion done notification with source and target formats
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"ConversionDoneNotification"
-                                                                        object:nil
-                                                                      userInfo:@{@"sourceFormat": oldExtension,
-                                                                                 @"targetFormat": newExtension}];
-                });
-            } else {
-                NSLog(@"Error moving converted file: %@", error.localizedDescription);
-            }
-        } else {
-            NSLog(@"Error moving original file to trash: %@", error.localizedDescription);
-            // Clean up the temp file if we couldn't move the original to trash
-            [fileManager removeItemAtPath:convertedTempFilePath error:nil];
-        }
+        [self moveConvertedFile:convertedTempFilePath currentPath:currentPath oldExtension:oldExtension newExtension:newExtension];
     }
 }
 
@@ -151,7 +181,7 @@ static NSString * const kAsyncConversionInProgress = @"AsyncConversionInProgress
                                                                   userInfo:@{@"error": error}];
             } else {
                 NSLog(@"Python conversion successful. Output file: %@", outputPath);
-                [self handleSuccessfulConversion:outputPath originalPath:filePath];
+                [self handleSuccessfulConversion:outputPath originalPath:filePath oldExtension:oldExtension newExtension:newExtension];
             }
         }];
 
@@ -209,37 +239,16 @@ static NSString * const kAsyncConversionInProgress = @"AsyncConversionInProgress
         } else {
             NSLog(@"Audio conversion successful. Output file: %@", outputPath);
             // Handle the successful conversion
-            [self handleSuccessfulConversion:outputPath originalPath:filePath];
+            [self handleSuccessfulConversion:outputPath originalPath:filePath oldExtension:oldExtension newExtension:newExtension];
         }
     }];
 }
 
-- (void)handleSuccessfulConversion:(NSString *)convertedFilePath originalPath:(NSString *)originalPath {
+- (void)handleSuccessfulConversion:(NSString *)convertedFilePath originalPath:(NSString *)originalPath oldExtension:(NSString *)oldExtension newExtension:(NSString *)newExtension {
     NSError *error = nil;
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    
-    // Move the original file to trash
-    NSURL *originalFileURL = [NSURL fileURLWithPath:originalPath];
-    if ([fileManager trashItemAtURL:originalFileURL resultingItemURL:nil error:&error]) {
-        // Move the converted temp file to the original file's location
-        if ([fileManager moveItemAtPath:convertedFilePath toPath:originalPath error:&error]) {
-            NSLog(@"Successfully replaced the original file with the converted file");
-            
-            // Dispatch the conversion done notification with source and target formats
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"ConversionDoneNotification"
-                                                                    object:nil
-                                                                  userInfo:@{@"sourceFormat": [originalPath pathExtension],
-                                                                             @"targetFormat": [convertedFilePath pathExtension]}];
-            });
-        } else {
-            NSLog(@"Error moving converted file: %@", error.localizedDescription);
-        }
-    } else {
-        NSLog(@"Error moving original file to trash: %@", error.localizedDescription);
-        // Clean up the temp file if we couldn't move the original to trash
-        [fileManager removeItemAtPath:convertedFilePath error:nil];
-    }
+
+    [self moveConvertedFile:convertedFilePath currentPath:originalPath oldExtension:oldExtension newExtension:newExtension];
 }
 
 - (NSString *)convertHEICtoJPG:(NSString *)filePath {
